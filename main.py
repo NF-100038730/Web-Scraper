@@ -8,17 +8,32 @@ import time
 options = webdriver.ChromeOptions()
 driver = webdriver.Chrome(options=options)
 
-driver.get("https://www.ticketmaster.com/")
+def checkShows(location, date, artist):
+    driver.get("https://www.ticketmaster.com/")
+    time.sleep(2.5)
+    locationSearch = driver.find_element(By.CLASS_NAME, 'sc-ttovyh-2 hgNgbE')
+    locationSearch.send_keys(location)
+    time.sleep(2.5)
+    #dateSearch = driver.find_element()
+    #dateSearch.send_keys(date)
+    time.sleep(2.5)
+    artistSearch = driver.find_element(By.ID, 'searchFormInput-input')
+    artistSearch.send_keys(artist)
+    artistSearch.send_keys(Keys.RETURN)
 
-running = True
+# time.sleep(60)
 
-while(running):
-    search = driver.find_element(By.ID, 'searchFormInput-input')
-    search.send_keys("Taylor Swift")
-    search.send_keys(Keys.RETURN)
-    time.sleep(10)
+# concertInfo = input("Enter city (eg. 77002, Houston, TX) >> "), input("Enter date (eg. 01/01/2024) >> "), input("Enter artist (eg. Taylor Swift) >> ")
 
-    running = False
+# locationSearch = driver.find_element(By.CLASS_NAME, 'sc-ttovyh-2 hgNgbE')
+# locationSearch.send_keys(concertInfo[0])
+# #dateSearch = 
+# artistSearch = driver.find_element(By.ID, 'searchFormInput-input')
+# artistSearch.send_keys(concertInfo[2])
+# artistSearch.send_keys(Keys.RETURN)
 
-else:
-    driver.quit()
+# time.sleep(10)
+
+# running = False
+
+# driver.quit()
