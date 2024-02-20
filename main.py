@@ -1,39 +1,30 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import requests
+import re
 
-import time
+#Storing wanted artist
+artist = input("Desired artist (eg. good-kid)>> ")
 
-#path = "C:/Users/Nathan/Desktop/chromedriver-win64.zip"
-options = webdriver.ChromeOptions()
-driver = webdriver.Chrome(options=options)
+#Transforimg wanted artist into an html search term
+artist_html_syntax = ""
+for c in artist:
+    if c == "-":
+        artist_html_syntax += "%20"
+    else:
+        artist_html_syntax += c 
 
-def checkShows(location, date, artist):
-    driver.get("https://www.ticketmaster.com/")
-    time.sleep(2.5)
-    locationSearch = driver.find_element(By.CLASS_NAME, 'sc-ttovyh-2 hgNgbE')
-    locationSearch.send_keys(location)
-    time.sleep(2.5)
-    #dateSearch = driver.find_element()
-    #dateSearch.send_keys(date)
-    time.sleep(2.5)
-    artistSearch = driver.find_element(By.ID, 'searchFormInput-input')
-    artistSearch.send_keys(artist)
-    artistSearch.send_keys(Keys.RETURN)
+#Obtaining the search URL for wanted artist
+prelim_url = "https://www.ticketmaster.com/search?q=" + artist_html_syntax
 
-# time.sleep(60)
+prelim_response = requests.get(prelim_url)
+prelim_soup = BeautifulSoup(prelim_response.text, "html.parser")
 
-# concertInfo = input("Enter city (eg. 77002, Houston, TX) >> "), input("Enter date (eg. 01/01/2024) >> "), input("Enter artist (eg. Taylor Swift) >> ")
+url = ""
+for link in prelim_soup.find_all('a'):
+    check_link = link.get("href")
+    if artist in check_link:
+        url = "https://www.ticketmaster.com" + check_link
+        break
 
-# locationSearch = driver.find_element(By.CLASS_NAME, 'sc-ttovyh-2 hgNgbE')
-# locationSearch.send_keys(concertInfo[0])
-# #dateSearch = 
-# artistSearch = driver.find_element(By.ID, 'searchFormInput-input')
-# artistSearch.send_keys(concertInfo[2])
-# artistSearch.send_keys(Keys.RETURN)
-
-# time.sleep(10)
-
-# running = False
-
-# driver.quit()
+response = requests.get(url)
+soup = BeautifulSoup(response.text, "html.parser")
