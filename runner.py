@@ -4,9 +4,8 @@ from main import *
 
 parser = ArgumentParser()
 parser.usage = "Ticketmaster Web Scraper"
-parser.add_argument("--location", type=str, help="str >> Approximate location of event (eg. 77002, Houston, TX)")
-parser.add_argument("--date", type=str, help="str >> Approximate date of event (eg. 01/01/2024)")
-parser.add_argument("--artist", type=str, help="str >> Name of artist (eg. Taylor Swift)")
+parser.add_argument("--state", type=str, help="str >> State that contains the wanted city (e.g. TX)")
+parser.add_argument("--city", type=str, help="str >> City that will be price checked (e.g. College Station)")
 args: Namespace = parser.parse_args()
 
-checkShows(args.location, args.date, args.artist)
+check_state(args.state, args.city)

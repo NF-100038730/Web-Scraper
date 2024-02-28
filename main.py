@@ -1,36 +1,26 @@
 from bs4 import BeautifulSoup
 import requests
-import re
+from s_to_f import *
 
-#Storing wanted artist
-artist = input("Desired artist (eg. good-kid) >> ")
+def check_state(state, city):
+    
+    state_full = short_to_full(state)
 
-#Storing wanted month
-month = input("First 3 letters of desired month (eg. OCT) >> ")
+    city_p20 = ""
+    for c in city:
+        if c == " ":
+            city_p20 += "%20"
+        else:
+            city_p20 += c
 
-#Transforimg wanted artist into an html search term
-artist_html_syntax = ""
-for c in artist:
-    if c == "-":
-        artist_html_syntax += "%20"
-    else:
-        artist_html_syntax += c 
+    #Getting gas price url for the given state and city
+    gb_url = f"https://www.{state_full}gasprices.com/{city_p20}/GasPriceSearch.aspx"
+    print(gb_url)
+    #Assigning a User-Agent as not to be rejected for botting with requests lib
+    headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"}
 
-#Obtaining the search URL for wanted artist
-prelim_url = "https://www.ticketmaster.com/search?q=" + artist_html_syntax
-
-prelim_response = requests.get(prelim_url)
-prelim_soup = BeautifulSoup(prelim_response.text, "html.parser")
-
-url = ""
-for links in prelim_soup.find_all('a'):
-    check_link = links.get("href")
-    if artist in check_link:
-        url = "https://www.ticketmaster.com" + check_link
-        break
-
-response = requests.get(url)
-soup = BeautifulSoup(response.text, "html.parser")
-
-months = soup.find_all(string=month)
-print(months)
+    #Creating a response object which the html text will be taken from and assigned to a BeautifulSoup object
+    #gb_response = requests.get(gb_url, headers=headers)
+    #gb_soup = BeautifulSoup(gb_response.text, "html.parser")
+    #print(gb_soup.prettify())
+        
