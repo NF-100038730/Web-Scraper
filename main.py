@@ -16,7 +16,6 @@ def check_state(state, city, fuel):
 
    #Getting gas price url for the given state and city
    gb_url = f"https://www.{state_full}gasprices.com/GasPriceSearch.aspx?fuel={fuel_type}&qsrch={city_p20},%20{state}"
-   print(gb_url)
    #Assigning a User-Agent as not to be rejected for botting with requests lib
    headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"}
 
@@ -24,19 +23,37 @@ def check_state(state, city, fuel):
    gb_response = requests.get(gb_url, headers=headers)
    gb_soup = BeautifulSoup(gb_response.text, "html.parser")
 
-   #Storing every element with a "price_num" class in a list
+   #Storing every element with "price_num" class in a list
    elements_with_price = gb_soup.find_all(class_="price_num")
-   #Creating a new list that will hold only the sting values
+   #Creating a new list that will hold only the sting values of the "price_num" classes
    prices = []
-
    #Going through every element in "elements_with_price" and storing the string value in prior list "prices"
    for i in range(len(elements_with_price)):
        parent = elements_with_price[i].parent
        div = parent.find("div")
        prices.append(div.string)
 
-   #elements_with_address = gb_soup.find_all(class_="address")
-   #addresses = []
+   #Storing every element with "address" class in a list
+   elements_with_address = gb_soup.find_all(class_="address")
+   #Creating a new list that will hold only the string values of the "address" classes
+   addresses = []
+   #Going through every element in "elements_with_address" and storing the string value in prior list "addresses"
+   for i in range(len(elements_with_address)):
+       parent = elements_with_address[i].parent
+       dd = parent.find("dd")
+       addresses.append(dd.string)
+
+   #Storing every element with "tm" class in a list
+   elements_with_tm = gb_soup.find_all(class_="tm")
+   #Creating a new list that will hold only the string values of the "tm" classes
+   times = []
+   #Going through every element in "elements_with_tm" and storing the string value in prior list "times"
+   
+
+       #times.append(div.string)
+
+   #for i in range(len(prices)):
+       #print("Price: $" + prices[i] + " as of " + times[i] + " | Address: " + addresses[i])
    
 
 
