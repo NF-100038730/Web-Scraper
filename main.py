@@ -24,6 +24,22 @@ def check_state(state, city, fuel):
    gb_response = requests.get(gb_url, headers=headers)
    gb_soup = BeautifulSoup(gb_response.text, "html.parser")
 
+   #Storing every element with a "price_num" class in a list
+   elements_with_price = gb_soup.find_all(class_="price_num")
+   #Creating a new list that will hold only the sting values
+   prices = []
+
+   #Going through every element in "elements_with_price" and storing the string value in prior list "prices"
+   for i in range(len(elements_with_price)):
+       parent = elements_with_price[i].parent
+       div = parent.find("div")
+       prices.append(div.string)
+
+   #elements_with_address = gb_soup.find_all(class_="address")
+   #addresses = []
+   
+
+
 def short_to_full(state):
    if state == "AL":
        return "alabama"
