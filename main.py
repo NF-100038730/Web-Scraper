@@ -1,10 +1,23 @@
+#bs4 import for navigation/manipulation of html docs
 from bs4 import BeautifulSoup
+
+#requests import for getting links that are used to make soups (html docs that reflect the response)
 import requests
 
+#os imports for pathways of files
+import os
+from os import getcwd
+
+#time import for auto updates of data via using a timer
+import time
+
+#Collecting data from the received html doc and 
 def check_state(state, city, fuel):
-   
+
+   #Calling a function to transform short state names into full length state names
    state_full = short_to_full(state)
 
+   #Creating a variable with spaces within the given city name as %20 for html usage
    city_p20 = ""
    for c in city:
        if c == " ":
@@ -12,10 +25,12 @@ def check_state(state, city, fuel):
        else:
            city_p20 += c
 
+   #Caloing a function that encodes the given fuel type based upon GasBuddy's search field
    fuel_type = fuel_to_id(fuel)
 
    #Getting gas price url for the given state and city
    gb_url = f"https://www.{state_full}gasprices.com/GasPriceSearch.aspx?fuel={fuel_type}&qsrch={city_p20},%20{state}"
+
    #Assigning a User-Agent as not to be rejected for botting with requests lib
    headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"}
 
@@ -48,15 +63,17 @@ def check_state(state, city, fuel):
    #Creating a new list that will hold only the string values of the "tm" classes
    times = []
    #Going through every element in "elements_with_tm" and storing the string value in prior list "times"
+   for i in range(len(elements_with_tm)):
+       div = elements_with_tm[i]
+       times.append(div.string)
+    
+   #Getting pathway of the txt file that updates will be posted to
+   notif_path = os.path.join(getcwd(), 'result.txt')
+
+   #Calling a function that takes the given lists of data and outputs them into a formated record in our txt file
+   update_data(notif_path, prices, addresses, times)
    
-
-       #times.append(div.string)
-
-   #for i in range(len(prices)):
-       #print("Price: $" + prices[i] + " as of " + times[i] + " | Address: " + addresses[i])
-   
-
-
+#Transforming short state names to full versions for html usage  
 def short_to_full(state):
    if state == "AL":
        return "alabama"
@@ -159,6 +176,7 @@ def short_to_full(state):
    elif state == "WY":
        return "wyoming"
 
+#Encoding the given fuel type to a specific letter as determined by GasBuddy
 def fuel_to_id(fuel):
    if fuel == "Regular":
        return "A"
@@ -168,3 +186,17 @@ def fuel_to_id(fuel):
        return "C"
    elif fuel == "Diesel":
        return "D"
+
+#Writing all data from the "prices" + "addresses" + "times" lists into our txt file the "path" of it
+def update_data(path, prices, addresses, times):
+   f = open(path, 'w')
+   for i in range(len(prices)):
+       price = "Price: $" + prices[i] + " as of" + times[i]
+       lay = 40 - len(price)
+       for j in range(lay):
+           if j == lay-1:
+               price += " | "
+           else:
+               price += " "
+       f.write(price + "Address: " + addresses[i] + "\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n")
+   f.close()

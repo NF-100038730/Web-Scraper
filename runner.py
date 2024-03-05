@@ -1,4 +1,7 @@
+#argparse imports for command line opperation
 from argparse import ArgumentParser, Namespace
+
+#main import for utilization of functions
 from main import *
 
 parser = ArgumentParser()
