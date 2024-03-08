@@ -8,9 +8,6 @@ import requests
 import os
 from os import getcwd
 
-#time import for auto updates of data via using a timer
-import time
-
 #Collecting data from the received html doc and 
 def check_state(state, city, fuel):
 
